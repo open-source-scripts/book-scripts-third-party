@@ -16,9 +16,8 @@ async function search(keyword, opaque) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             "User-Agent": UserAgents.macos,
-            'Cookie': await Storage.get('cookie'),
         },
-        data: `searchkey=${await Codec.encodeURIComponent(keyword, 'utf-8')}`,
+        data: `searchkey=${encodeURIComponent(keyword)}`,
     });
     if (resp.status !== 200) {
         return {
@@ -30,7 +29,6 @@ async function search(keyword, opaque) {
     let items = doc.querySelectorAll("#main > div.list_center > div#sitebox > dl")
     let result = [];
     for (let item of items) {
-        // try {
         let data = Date.parseWithFormat(item.querySelector("dd:nth-of-type(1) > h3 > span.uptime").text,"yyy-MM-dd");
         let nameEle = item.querySelector("dd:nth-of-type(1) h3 a");
         let name = nameEle.text;
@@ -50,9 +48,7 @@ async function search(keyword, opaque) {
             id: id,
             name: name,
             author: author,
-            // authorId: '作者ID',
             category: category,
-            // tags: ['教程', '宝典'],
             intro: intro,
             cover: cover,
             words: parseInt(words),
@@ -60,12 +56,6 @@ async function search(keyword, opaque) {
             lastChapterName: lastChapterName,
             status: 0, // 状态: 0: 连载; 1: 完本; 2: 断更;
         });
-        /*}catch (e) {
-            return {
-                code: 500,
-                message: e.message +"\n" +e.stack.toString(),
-            };
-        }*/
     }
     return {
         data: {
@@ -95,7 +85,7 @@ async function detail(id) {
     let intro = doc.querySelector("#bookintro p").text.trim();
     let cover = uri.resolve(doc.querySelector("#bookimg img").getAttribute("src")).toString();
     let updateTime = Date.parseWithFormat(doc.querySelector("#uptime span").text, "yyyy-MM-dd");
-    let lastChapterName = doc.querySelector("#newlist .chaw .li:nth-of-type(1) a").text;
+    let lastChapterName = doc.querySelector("#newlist .chaw li:nth-of-type(1) a").text;
     let status = doc.querySelector("#count ul li:nth-of-type(3) span") === "连载中" ? 1 : 0;
     return {
         data: {
@@ -117,7 +107,6 @@ async function toc(id) {
     let idObj = JSON.parse(id)
     let response = await fetch(`https://xcmfu.com/${idObj.cateId}/${idObj.bookId}.html`, {
         headers: {"User-Agent": UserAgents.macos},
-        'Cookie': await Storage.get('cookie'),
     });
     if (response.status !== 200) {
         return {
@@ -161,9 +150,6 @@ async function chapter(bid, cid) {
     }
     let doc = new Document(response.data);
     let html = doc.querySelector("#TextContent").innerHtml;
-    html = html.substring(html.indexOf("<br>"));
-    html = html.replace(/<a[^>]*>([^<]+)<\/a>/g, "");
-    html = html.replace(/&(nbsp|amp|quot|lt|gt);/g, "");
     return {
         data: {
             finalUrl: response.finalUrl,
