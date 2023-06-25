@@ -38,7 +38,11 @@ async function search(keyword, opaque) {
       let item = items[i];
       let name = item.articlename;
       let url = item.url_list;
-      let id = Uri.parse(url).pathSegments[1];
+      let uri = Uri.parse(url);
+      let id = JSON.stringify({
+        id: uri.pathSegments[1],
+        host: uri.host.replace(/^m\./, 'www.'),
+      });
       let cover = item.url_img;
       let author = item.author;
       let intro = item.intro;
@@ -61,8 +65,11 @@ async function search(keyword, opaque) {
 }
 
 // 详情
-async function detail(id) {
-  let response = await fetch(`https://www.bqg221.com/biquge/${id}/`);
+async function detail(args) {
+  let params = JSON.parse(args);
+  let id = params.id;
+  let host = params.host;
+  let response = await fetch(`https://${host}/biquge/${id}/`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -80,7 +87,7 @@ async function detail(id) {
   let status = $.querySelector("div.info > div.small > span:nth-child(2)").text.includes('连载') ? 0 : 1;
   return {
     data: {
-      id: id,
+      id: args,
       name: name,
       author: author,
       intro: intro,
@@ -94,8 +101,11 @@ async function detail(id) {
 }
 
 // 目录
-async function toc(id) {
-  let response = await fetch(`https://www.bqg221.com/biquge/${id}/`);
+async function toc(args) {
+  let params = JSON.parse(args);
+  let id = params.id;
+  let host = params.host;
+  let response = await fetch(`https://${host}/biquge/${id}/`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -123,8 +133,11 @@ async function toc(id) {
 }
 
 // 章节
-async function chapter(bid, cid) {
-  let response = await fetch(`https://www.bqg221.com/biquge/${bid}/${cid}.html`);
+async function chapter(args, cid) {
+  let params = JSON.parse(args);
+  let bid = params.id;
+  let host = params.host;
+  let response = await fetch(`https://${host}/biquge/${bid}/${cid}.html`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -182,7 +195,7 @@ async function category(categories, opaque) {
       let author = item.author;
       let intro = item.intro;
       array.push({
-        id: id,
+        id: JSON.stringify({id: id, host: 'www.bqg221.com'}),
         name: name,
         cover: cover,
         author: author,
