@@ -85,7 +85,7 @@ async function detail(id) {
     let intro = doc.querySelector("#bookintro p").text.trim();
     let cover = uri.resolve(doc.querySelector("#bookimg img").getAttribute("src")).toString();
     let updateTime = Date.parseWithFormat(doc.querySelector("#uptime span").text, "yyyy-MM-dd");
-    let lastChapterName = doc.querySelector("#newlist .chaw .li:nth-of-type(1) a").text;
+    let lastChapterName = doc.querySelector("#newlist .chaw li:nth-of-type(1) a").text;
     let status = doc.querySelector("#count ul li:nth-of-type(3) span") === "连载中" ? 1 : 0;
     return {
         data: {
