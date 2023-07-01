@@ -29,7 +29,7 @@ async function search(keyword, opaque) {
     let items = doc.querySelectorAll("#main > div.list_center > div#sitebox > dl")
     let result = [];
     for (let item of items) {
-        let data = Date.parseWithFormat(item.querySelector("dd:nth-of-type(1) > h3 > span.uptime").text,"yyy-MM-dd");
+        let data = Date.parseWithFormat(item.querySelector("dd:nth-of-type(1) > h3 > span.uptime").text,"yyyy-MM-dd");
         let nameEle = item.querySelector("dd:nth-of-type(1) h3 a");
         let name = nameEle.text;
         let url = nameEle.getAttribute("href");
