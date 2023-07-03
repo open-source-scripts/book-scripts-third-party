@@ -21,6 +21,13 @@
       "domain": "ymxwx.com",
       "homepage": "http://ymxwx.com",
       "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
+      "name": "壹笔阁",
+      "domain": "ybiquge.net",
+      "homepage": "https://www.ybiquge.net",
+      "version": "1.0.0"
     }
   ]
 }
