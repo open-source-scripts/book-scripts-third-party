@@ -185,7 +185,7 @@ const categories = {
             {key: '奇幻', value: "qihuan"},
             {key: '修真', value: "xiuzhen"},
             {key: '都市', value: "dushi"},
-            {key: '都市', value: "yanqing"},
+            {key: '言情', value: "yanqing"},
             {key: '历史', value: "lishi"},
             {key: '同人', value: "tongren"},
             {key: '武侠', value: "wuxia"},
