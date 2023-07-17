@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name          X小说
 // @domain        xcmfu.com
-// @version       1.0.0
+// @version       1.0.1
 // @supportURL    https://github.com/open-book-source/booksource-third-party/issues
 // @function      search
 // @function      detail
 // @function      toc
 // @function      chapter
+// @function      categories
 // ==/UserScript==
 
 async function search(keyword, opaque) {
@@ -29,7 +30,7 @@ async function search(keyword, opaque) {
     let items = doc.querySelectorAll("#main > div.list_center > div#sitebox > dl")
     let result = [];
     for (let item of items) {
-        let data = Date.parseWithFormat(item.querySelector("dd:nth-of-type(1) > h3 > span.uptime").text,"yyy-MM-dd");
+        let data = Date.parseWithFormat(item.querySelector("dd:nth-of-type(1) > h3 > span.uptime").text, "yyyy-MM-dd");
         let nameEle = item.querySelector("dd:nth-of-type(1) h3 a");
         let name = nameEle.text;
         let url = nameEle.getAttribute("href");
@@ -40,7 +41,7 @@ async function search(keyword, opaque) {
         let author = item.querySelector("dd.book_other span:nth-of-type(1)").text
         let category = item.querySelector("dd.book_other span:nth-of-type(2)").text
         let words = item.querySelector("dd.book_other span:nth-of-type(3)").text
-        let cover = `https://xcmfu.com/images/${cateId}/${bookId}/${bookId}s.jpg`
+        let cover = item.querySelector("dt a img").getAttribute("data-original")
         let intro = item.querySelector("dd.book_des").text
         let lastChapterName = item.querySelector("dd:nth-of-type(4) a").text
 
@@ -61,7 +62,7 @@ async function search(keyword, opaque) {
         data: {
             data: result,
             hasMore: false,
-            opaque:opaque,
+            opaque: opaque,
         }
     }
 }
@@ -156,4 +157,76 @@ async function chapter(bid, cid) {
             body: html,
         },
     };
+}
+
+const categories = {
+    data: {
+        children: [
+            {key: '玄幻魔法', value: 1},
+            {key: '武侠修真', value: 2},
+            {key: '都市言情', value: 3},
+            {key: '历史军事', value: 4},
+            {key: '网游竞技', value: 5},
+            {key: '科幻小说', value: 6},
+            {key: '恐怖灵异', value: 7},
+            {key: '其他类型', value: 8},
+        ],
+    },
+};
+
+async function category(categories, opaque) {
+    let type = categories[0];
+    let page = opaque ? opaque.page : 1;
+    let response = await fetch(`https://xcmfu.com/fenlei/${type}/${page}.html`);
+    if (response.status !== 200) {
+        return {
+            code: response.status,
+            message: 'Network error!',
+        };
+    }
+    let uri = Uri.parse(response.finalUrl);
+    let document = new Document(response.data);
+    let items = document.querySelectorAll("#sitebox > dl")
+    let result = [];
+    for (let item of items) {
+        let data = Date.parseWithFormat(item.querySelector("dd:nth-of-type(1) > h3 > span.uptime").text, "yyyy-MM-dd");
+        let nameEle = item.querySelector("dd:nth-of-type(1) h3 a");
+        let name = nameEle.text;
+        let url = nameEle.getAttribute("href");
+        let matchArray = url.match(/\/(\d+)\/(\d+).html/);
+        let cateId = matchArray[1];
+        let bookId = matchArray[2];
+        let id = JSON.stringify({cateId: cateId, bookId: bookId})
+        let author = item.querySelector("dd.book_other span:nth-of-type(1)").text
+        let category = item.querySelector("dd.book_other span:nth-of-type(2)").text
+        let words = item.querySelector("dd.book_other span:nth-of-type(3)").text
+        let cover = item.querySelector("dt a img").getAttribute("data-original")
+        let intro = item.querySelector("dd.book_des").text
+        let lastChapterName = item.querySelector("dd:nth-of-type(4) a").text
+
+        result.push({
+            id: id,
+            name: name,
+            author: author,
+            category: category,
+            intro: intro,
+            cover: cover,
+            words: parseInt(words),
+            updateTime: data, // 更新日期
+            lastChapterName: lastChapterName,
+            status: 0, // 状态: 0: 连载; 1: 完本; 2: 断更;
+        });
+    }
+    let hasPageNum = document.querySelector("#pagelink") !== undefined
+    let pageNum = hasPageNum ? document.querySelector("#pagelink strong+a").text : undefined
+    pageNum = pageNum === ">>" ? undefined : pageNum
+    return {
+        data: {
+            data: result,
+            hasMore: pageNum !== undefined,
+            opaque: {
+                page: pageNum
+            },
+        }
+    }
 }
