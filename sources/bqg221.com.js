@@ -10,20 +10,49 @@
 // @function      categories
 // ==/UserScript==
 
+function parseSetCookie(cookie) {
+  let arr = cookie.replace(/expires=(.*?)GMT/g, function ($1) {
+    return "expires=" + new Date($1).getTime();
+  }).split(", ");
+
+  let cookies = [];
+  for (let i = 0; i < arr.length; i++) {
+    let cookie = parse(/([^=;\s]+)=([^;]+);?/g, arr[i].replace(/; httponly/g, "$&=true"));
+    cookies.push(cookie);
+  }
+
+  function parse(reg, text) {
+    if (!reg || !text) return {}
+    const hash = {};
+    let res = reg.exec(text);
+    while (res !== null) {
+      hash[res[1]] = res[2];
+      res = reg.exec(text);
+    }
+    return hash;
+  }
+
+  return cookies;
+}
 
 // 搜索
 async function search(keyword, opaque) {
-  let page = opaque ? opaque.page : 1;
   let query = encodeURIComponent(keyword);
-  let hmResponse = await fetch(`https://user.bqgso.cc/hm.html?callback=jsonp1&q=${query}`)
+  let hmResponse = await fetch(`https://www.bqg221.com/user/hm.html?q=${query}`)
   if (hmResponse.status !== 200) {
     return {
       code: response.status,
       message: 'Network error!',
     };
   }
-  let hm = hmResponse.data.match(/^jsonp1\("(.+?)"\)$/)[1];
-  let response = await fetch(`https://user.bqgso.cc/search.html?callback=jsonp2&q=${query}&hm=${hm}`);
+  let hm = parseSetCookie(hmResponse.headers.get('set-cookie')[0]).find((e) => e.hm);
+  const headers = {};
+  if (hm) {
+    headers['Cookie'] = `hm=${hm.hm}`;
+  }
+  let response = await fetch(`https://www.bqg221.com/user/search.html?q=${query}`, {
+    headers: headers,
+  });
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -31,18 +60,14 @@ async function search(keyword, opaque) {
     };
   }
 
-  let items = JSON.parse(response.data.match(/^jsonp2\((.+?)\)$/)[1]);
+  let items = JSON.parse(response.data);
   let array = [];
   for (let i = 0; i < items.length; i++) {
     try {
       let item = items[i];
       let name = item.articlename;
       let url = item.url_list;
-      let uri = Uri.parse(url);
-      let id = JSON.stringify({
-        id: uri.pathSegments[1],
-        host: uri.host.replace(/^m\./, 'www.'),
-      });
+      let id = Uri.parse(url).pathSegments[1];
       let cover = item.url_img;
       let author = item.author;
       let intro = item.intro;
@@ -65,11 +90,8 @@ async function search(keyword, opaque) {
 }
 
 // 详情
-async function detail(args) {
-  let params = JSON.parse(args);
-  let id = params.id;
-  let host = params.host;
-  let response = await fetch(`https://${host}/biquge/${id}/`);
+async function detail(id) {
+  let response = await fetch(`https://www.bqg221.com/biquge/${id}/`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -87,7 +109,7 @@ async function detail(args) {
   let status = $.querySelector("div.info > div.small > span:nth-child(2)").text.includes('连载') ? 0 : 1;
   return {
     data: {
-      id: args,
+      id: id,
       name: name,
       author: author,
       intro: intro,
@@ -101,11 +123,8 @@ async function detail(args) {
 }
 
 // 目录
-async function toc(args) {
-  let params = JSON.parse(args);
-  let id = params.id;
-  let host = params.host;
-  let response = await fetch(`https://${host}/biquge/${id}/`);
+async function toc(id) {
+  let response = await fetch(`https://www.bqg221.com/biquge/${id}/`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -133,11 +152,8 @@ async function toc(args) {
 }
 
 // 章节
-async function chapter(args, cid) {
-  let params = JSON.parse(args);
-  let bid = params.id;
-  let host = params.host;
-  let response = await fetch(`https://${host}/biquge/${bid}/${cid}.html`);
+async function chapter(bid, cid) {
+  let response = await fetch(`https://www.bqg221.com/biquge/${bid}/${cid}.html`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -190,12 +206,12 @@ async function category(categories, opaque) {
       let item = items[i];
       let name = item.articlename;
       let url = item.url_list;
-      let id = url.split('/')[2];
+      let id = Uri.parse(url).pathSegments[1];
       let cover = item.url_img;
       let author = item.author;
       let intro = item.intro;
       array.push({
-        id: JSON.stringify({id: id, host: 'www.bqg221.com'}),
+        id: id,
         name: name,
         cover: cover,
         author: author,
