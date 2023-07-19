@@ -54,7 +54,7 @@ async function search(keyword, opaque) {
         });
     }
     let hasPageNum = document.querySelector(".container > div.left > .lastest > ul > li.pagination") !== undefined
-    let pageNum = hasPageNum ? document.querySelector(".container > div.left > .lastest > ul > li.pagination > a.current+a").text : undefined
+    let pageNum = hasPageNum ? document.querySelector(".container > div.left > .lastest > ul > li.pagination > a.current+a")?.text : undefined
     return {
         data: {
             data: result,
