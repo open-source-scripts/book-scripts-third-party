@@ -81,7 +81,7 @@ async function detail(id) {
     let infoElement = doc.querySelector(".container > div.left > .info")
     let name = infoElement.querySelector(".line h1").ownText.trim();
     let author = infoElement.querySelector("p.detail.pt20 i:nth-of-type(1)").text;
-    let intro = infoElement.querySelector(".desc+p").text.trim();
+    let intro = infoElement.querySelector(".desc").ownText.trim();
     let cover = infoElement.querySelector(".cover img").getAttribute("src");
     let updateTime = Date.parseWithFormat(infoElement.querySelector(".detail:nth-of-type(2) i").text, "yyyy-MM-dd HH:mm");
     let lastChapterName = infoElement.querySelector(".detail:nth-of-type(3) i").text;
@@ -114,19 +114,10 @@ async function toc(id) {
     }
     let uri = Uri.parse(response.finalUrl);
     let document = new Document(response.data);
-    let items = document.querySelectorAll(".container > .info > ul.mulu > li")
+    let items = document.querySelectorAll(".mulu .col1:nth-child(n+2) ~ .col3 a")
     let array = [];
-    let skipItem = true
     for (let i = 0; i < items.length; i++) {
         let item = items[i];
-        if (item.text === "正文") {
-            skipItem = false
-            continue
-        }
-        if (skipItem) {
-            continue
-        }
-        item = item.querySelector("a")
         let url = item.getAttribute('href');
         array.push({
             name: item.text,
@@ -154,30 +145,16 @@ async function chapter(bid, cid) {
         };
     }
     let document = new Document(response.data);
-    let contentEle = document.querySelector(".chaptercontent div.content");
-    let contentText = contentEle.innerHtml.replaceAll("<br>", "\n")
-    contentText = contentText.replaceAll("<script type=\"text/javascript\">applyChapterSetting();</script>", "")
+    let element = document.querySelector(".chaptercontent div.content");
+    let content = element.innerHtml;
     return {
         data: {
             finalUrl: response.finalUrl,
-            body: contentText,
+            body: content,
         },
     };
 }
-const xuanhuan = "xuanhuan"
-const qihuan = "qihuan"
-const xiuzhen = "xiuzhen"
-const dushi = "dushi"
-const yanqing = "yanqing"
-const lishi = "lishi"
-const tongren = "tongren"
-const wuxia = "wuxia"
-const kehuan = "kehuan"
-const youxi = "youxi"
-const junshi = "junshi"
-const jingji = "jingji"
-const lingyi = "lingyi"
-const qita = "qita"
+
 const categories = {
     data: {
         children: [
