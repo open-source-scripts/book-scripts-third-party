@@ -82,7 +82,7 @@ async function detail(id) {
     let uri = Uri.parse(response.finalUrl);
     let doc = new Document(response.data);
     let name = doc.querySelector(".info > h1").ownText.trim();
-    let author = doc.querySelector(".info > .small > span:nth-of-type(1)").text.replace("作者：");
+    let author = doc.querySelector(".info > .small > span:nth-of-type(1)").text.replace("作者：", "");
     let intro = doc.querySelector(".info > .intro").text.replace("展开全部>>", "").trim();
     let cover = uri.resolve(doc.querySelector(".info > .cover > img").getAttribute("src")).toString();
     let updateTime = Date.parseWithFormat(doc.querySelector(".info > .small > span:nth-of-type(3)").text.replace("更新：", ""), "yyyy-MM-dd HH:mm:ss");
@@ -153,15 +153,6 @@ async function chapter(bid, cid) {
     };
 }
 
-
-const xuanhuan = "xuanhuan"
-const wuxia = "wuxia"
-const dushi = "dushi"
-const lishi = "lishi"
-const youxi = "youxi"
-const kehuan = "kehuan"
-const mm = "mm"
-const finish = "finish"
 const categories = {
     data: {
         children: [
