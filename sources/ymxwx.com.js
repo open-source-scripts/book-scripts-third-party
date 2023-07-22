@@ -114,7 +114,7 @@ async function toc(id) {
     }
     let uri = Uri.parse(response.finalUrl);
     let document = new Document(response.data);
-    let items = document.querySelectorAll(".mulu .col1:nth-child(n+2) ~ .col3 a")
+    let items = document.queryXpath(`//article//li[contains(@class,"col1")][2]/following-sibling::li//a`)
     let array = [];
     for (let i = 0; i < items.length; i++) {
         let item = items[i];

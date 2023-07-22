@@ -125,7 +125,7 @@ async function toc(id) {
   }
   let uri = Uri.parse(response.finalUrl);
   let $ = new Document(response.data);
-  let items = $.queryXpath(`//div[@id=\"list\"]/dl/dt[last()]/following-sibling::dd/a`)
+  let items = $.queryXpath(`//div[@id="list"]/dl/dt[2]/following-sibling::dd/a`)
   let array = [];
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
