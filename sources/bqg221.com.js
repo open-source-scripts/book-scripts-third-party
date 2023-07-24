@@ -41,7 +41,7 @@ async function search(keyword, opaque) {
   let hmResponse = await fetch(`https://www.bqg221.com/user/hm.html?q=${query}`)
   if (hmResponse.status !== 200) {
     return {
-      code: response.status,
+      code: hmResponse.status,
       message: 'Network error!',
     };
   }
