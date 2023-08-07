@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          X小说
 // @domain        xcmfu.com
-// @version       1.0.1
+// @version       1.0.2
 // @supportURL    https://github.com/open-book-source/booksource-third-party/issues
 // @function      search
 // @function      detail
@@ -197,9 +197,9 @@ async function category(categories, opaque) {
         let cateId = matchArray[1];
         let bookId = matchArray[2];
         let id = JSON.stringify({cateId: cateId, bookId: bookId})
-        let author = item.querySelector("dd.book_other span:nth-of-type(1)").text
-        let category = item.querySelector("dd.book_other span:nth-of-type(2)").text
+        let category = item.querySelector("dd.book_other span:nth-of-type(1)").text
         let words = item.querySelector("dd.book_other span:nth-of-type(3)").text
+        let status = item.querySelector("dd.book_other span:nth-of-type(2)").text === '连载' ? 0 : 1;
         let cover = item.querySelector("dt a img").getAttribute("data-original")
         let intro = item.querySelector("dd.book_des").text
         let lastChapterName = item.querySelector("dd:nth-of-type(4) a").text
@@ -207,14 +207,13 @@ async function category(categories, opaque) {
         result.push({
             id: id,
             name: name,
-            author: author,
             category: category,
             intro: intro,
             cover: cover,
             words: parseInt(words),
             updateTime: data, // 更新日期
             lastChapterName: lastChapterName,
-            status: 0, // 状态: 0: 连载; 1: 完本; 2: 断更;
+            status: status, // 状态: 0: 连载; 1: 完本; 2: 断更;
         });
     }
     let hasPageNum = document.querySelector("#pagelink") !== undefined
