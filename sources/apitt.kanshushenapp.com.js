@@ -134,8 +134,9 @@ const categories = {
 async function category(categories, opaque) {
   let type = categories[0];
   let page = opaque ? opaque.page : 1;
+  let pre = 30; 
   let token = CryptoJS.MD5(`auth_shipsay_941376${new Date().getMinutes()}`).toString();
-  let response = await fetch(`http://apitt.kanshushenapp.com/json/api_class_list.php?page=${page}&per=30&sortid=${type}&token=${token}`);
+  let response = await fetch(`http://apitt.kanshushenapp.com/json/api_class_list.php?page=${page}&per=${pre}&sortid=${type}&token=${token}`);
   if (response.status !== 200) {
     return {
       code: response.status,
@@ -162,6 +163,10 @@ async function category(categories, opaque) {
   return {
     data: {
       data: array,
+      hasMore: array.length >= pre,
+      opaque: {
+        page: ++page,
+      },
     }
   };
 }
