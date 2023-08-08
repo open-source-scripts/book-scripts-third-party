@@ -31,6 +31,12 @@
       "name": "衍墨轩",
       "domain": "ymxwx.com",
       "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
+      "name": "企鹅听书",
+      "domain": "pub.ddrd8.com",
+      "version": "1.0.0"
     }
   ]
 }
