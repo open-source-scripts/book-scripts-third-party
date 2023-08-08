@@ -28,7 +28,7 @@ async function search(keyword, opaque) {
       name: e.articlename,
       author: e.author,
       category: e.sortname,
-      intro: e.intro_p,
+      intro: e.intro_des,
       cover: e.img_url,
       words: e.words,
       updateTime: new Date(parseInt(e.lastupdate) * 1000), // 更新日期
@@ -151,7 +151,7 @@ async function category(categories, opaque) {
       name: e.articlename,
       author: e.author,
       category: e.sortname,
-      intro: e.intro_p,
+      intro: e.intro_des,
       cover: e.img_url,
       words: e.words,
       updateTime: new Date(parseInt(e.lastupdate) * 1000), // 更新日期
