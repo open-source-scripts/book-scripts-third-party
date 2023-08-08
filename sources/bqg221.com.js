@@ -1,4 +1,5 @@
 // ==UserScript==
+// @testScript    ../test_bqg221.com.js
 // @name          笔趣阁
 // @domain        bqg221.com
 // @version       1.0.0
@@ -177,14 +178,14 @@ async function chapter(bid, cid) {
 const categories = {
   data: {
     children: [
-      {key: '玄幻', value: '1'},
-      {key: '武侠', value: '2'},
-      {key: '都市', value: '3'},
-      {key: '历史', value: '4'},
-      {key: '网游', value: '5'},
-      {key: '科幻', value: '6'},
-      {key: '女生', value: '7'},
-      {key: '完本', value: '0'},
+      { key: '玄幻', value: '1' },
+      { key: '武侠', value: '2' },
+      { key: '都市', value: '3' },
+      { key: '历史', value: '4' },
+      { key: '网游', value: '5' },
+      { key: '科幻', value: '6' },
+      { key: '女生', value: '7' },
+      { key: '完本', value: '0' },
     ],
   },
 };
