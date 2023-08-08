@@ -1,5 +1,4 @@
 // ==UserScript==
-// @testScript    ../test_bqg221.com.js
 // @name          笔趣阁
 // @domain        bqg221.com
 // @version       1.0.0

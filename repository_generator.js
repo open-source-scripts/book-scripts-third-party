@@ -12,6 +12,8 @@ const sources = [];
 for (const file of sourceFiles) {
   if (!fs.statSync(file).isFile) continue;
   const meta = script.parseMeta(fs.readFileSync(file, 'utf8'));
+  if (meta.status === 'obsolete') continue;
+  
   sources.push({
     format: 'javascript',
     type: meta.type,

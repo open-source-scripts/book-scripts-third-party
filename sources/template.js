@@ -1,7 +1,9 @@
 // ==UserScript==
+// @status        obsolete
+// @testScript    ../test/example.com.js
 // @type          插件类型
 // @name          网站名字
-// @domain        网站域名
+// @domain        example.com
 // @homepage      网站主页
 // @description   网站描述
 // @version       1.0.0
