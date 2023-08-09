@@ -8,7 +8,7 @@
 // @description   网站描述
 // @version       1.0.0
 // @icon          https://open-book-source.com/favicon.ico
-// @supportUrl    https://github.com/open-book-source/booksource/issues
+// @supportUrl    https://github.com/open-book-source/booksource-third-party/issues
 // @require       https://example.com/example.min.js
 // @function      categories
 // @function      search
@@ -34,18 +34,18 @@ function categories() {
         {
           key: '分类名称_0', value: 0, child: {
             children: [
-              {key: '子分类名称_0', value: 0},
-              {key: '子分类名称_1', value: 1},
-              {key: '子分类名称_2', value: 2},
+              { key: '子分类名称_0', value: 0 },
+              { key: '子分类名称_1', value: 1 },
+              { key: '子分类名称_2', value: 2 },
             ]
           },
         },
         {
           key: '分类名称_1', value: 1, child: {
             children: [
-              {key: '子分类名称_0', value: 0},
-              {key: '子分类名称_1', value: 1},
-              {key: '子分类名称_2', value: 2},
+              { key: '子分类名称_0', value: 0 },
+              { key: '子分类名称_1', value: 1 },
+              { key: '子分类名称_2', value: 2 },
             ]
           },
         },

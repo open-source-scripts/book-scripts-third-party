@@ -16,10 +16,10 @@ async function main() {
       children = categories.data.children;
     }
 
-    while (children) {
+    while (children && children.length > 0) {
       let child = children[0];
       cateArgs.push(child.value);
-      children = child.children;
+      children = child.child?.children;
     }
     console.log(`分类开始, 参数: ${JSON.stringify(cateArgs)}`);
     let response = await category(cateArgs);
