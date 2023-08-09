@@ -6,6 +6,55 @@ async function main() {
   let firstBook;
   let firstChapter;
 
+  // 分类
+  if (typeof (categories) !== 'undefined') {
+    let cateArgs = [];
+    let children;
+    if (typeof categories === 'function') {
+      children = (await categories()).data.children;
+    } else {
+      children = categories.data.children;
+    }
+
+    while (children) {
+      let child = children[0];
+      cateArgs.push(child.value);
+      children = child.children;
+    }
+    console.log(`分类开始, 参数: ${JSON.stringify(cateArgs)}`);
+    let response = await category(cateArgs);
+    if (response.code !== undefined && response.code !== 0) {
+      console.error(`分类失败: ${response.message ?? '未知'}\n`);
+      return;
+    }
+    let length = response.data.data?.length;
+    if (!(length && length > 0)) {
+      console.error('分类失败: 没有找到书籍\n');
+      return;
+    }
+    console.log(`书籍数据: ${JSON.stringify(response.data.data[0])}`);
+    console.log(`分类结束, 找到${length}本书, ${response.data.hasMore ? '有' : '没有'}更多\n`);
+
+    // 分类下一页
+    let nextOpaque = response.data.opaque;
+    if (response.data.hasMore) {
+      console.log(`分类下一页, 参数: ${JSON.stringify(cateArgs)}, ${JSON.stringify(nextOpaque)}`);
+      let response = await category(cateArgs, nextOpaque);
+      if (response.code !== undefined && response.code !== 0) {
+        console.error(`分类下一页失败: (${response.code})${response.message ?? '未知'}\n`);
+        return;
+      }
+      let length = response.data.data?.length;
+      if (!(length && length > 0)) {
+        console.error('分类下一页失败: 没有找到书籍\n');
+        return;
+      }
+      console.log(`分类下一页结束, 找到${length}本书, ${response.data.hasMore ? '有' : '没有'}更多\n`);
+    }
+  } else {
+    console.log(`分类方法不存在\n`);
+  }
+
   // 搜索
   if (typeof (search) !== 'undefined') {
     let keyword = '都市';
@@ -90,49 +139,6 @@ async function main() {
     console.log(`章节结束, 内容: ${JSON.stringify(response.data)}\n`);
   } else {
     console.log(`章节方法不存在\n`);
-  }
-
-  // 分类
-  if (typeof (categories) !== 'undefined') {
-    let cateArgs = [];
-    let children = categories.data.children;
-    while (children) {
-      let child = children[0];
-      cateArgs.push(child.value);
-      children = child.children;
-    }
-    console.log(`分类开始, 参数: ${JSON.stringify(cateArgs)}`);
-    let response = await category(cateArgs);
-    if (response.code !== undefined && response.code !== 0) {
-      console.error(`分类失败: ${response.message ?? '未知'}\n`);
-      return;
-    }
-    let length = response.data.data?.length;
-    if (!(length && length > 0)) {
-      console.error('分类失败: 没有找到书籍\n');
-      return;
-    }
-    console.log(`书籍数据: ${JSON.stringify(response.data.data[0])}`);
-    console.log(`分类结束, 找到${length}本书, ${response.data.hasMore ? '有' : '没有'}更多\n`);
-
-    // 分类下一页
-    let nextOpaque = response.data.opaque;
-    if (response.data.hasMore) {
-      console.log(`分类下一页, 参数: ${JSON.stringify(cateArgs)}, ${JSON.stringify(nextOpaque)}`);
-      let response = await category(cateArgs, nextOpaque);
-      if (response.code !== undefined && response.code !== 0) {
-        console.error(`分类下一页失败: (${response.code})${response.message ?? '未知'}\n`);
-        return;
-      }
-      let length = response.data.data?.length;
-      if (!(length && length > 0)) {
-        console.error('分类下一页失败: 没有找到书籍\n');
-        return;
-      }
-      console.log(`分类下一页结束, 找到${length}本书, ${response.data.hasMore ? '有' : '没有'}更多\n`);
-    }
-  } else {
-    console.log(`分类方法不存在\n`);
   }
 
   console.verbose('书源测试结束');

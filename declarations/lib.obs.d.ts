@@ -23,7 +23,7 @@ interface DateConstructor {
      * @param text 日期文本
      * @param pattern 日期格式
      */
-    parseDateWithFormat(text: string, pattern: string): number;
+    parseWithFormat(text: string, pattern: string): number;
 }
 
 declare var Date: DateConstructor;
