@@ -1,5 +1,5 @@
 // ==UserScript==
-// @script    ./source/example.com.js
+// @script    ../source/example.com.js
 // ==/UserScript==
 
 async function main() {
