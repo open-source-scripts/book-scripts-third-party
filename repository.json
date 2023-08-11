@@ -51,6 +51,12 @@
       "name": "衍墨轩",
       "domain": "ymxwx.com",
       "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
+      "name": "必看悦读",
+      "domain": "97yd.com",
+      "version": "1.0.0"
     }
   ]
 }
