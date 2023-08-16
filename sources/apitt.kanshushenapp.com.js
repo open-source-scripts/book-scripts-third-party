@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          看书神
 // @domain        apitt.kanshushenapp.com
-// @version       1.0.0
+// @version       1.0.1
 // @supportURL    https://github.com/open-book-source/booksource-third-party/issues
 // @require       https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @function      search
@@ -22,20 +22,22 @@ async function search(keyword, opaque) {
   }
   let $ = JSON.parse(response.data);
   let array = [];
-  $.result_rows.forEach(e => {
-    array.push({
-      id: e.articleid,
-      name: e.articlename,
-      author: e.author,
-      category: e.sortname,
-      intro: e.intro_des,
-      cover: e.img_url,
-      words: e.words,
-      updateTime: new Date(parseInt(e.lastupdate) * 1000), // 更新日期
-      lastChapterName: e.lastchapter,
-      status: e.fullflag === '0' ? 0 : 1, // 状态: 0: 连载; 1: 完本; 2: 断更; 
+  if ($.result_rows instanceof Array) {
+    $.result_rows.forEach(e => {
+      array.push({
+        id: e.articleid,
+        name: e.articlename,
+        author: e.author,
+        category: e.sortname,
+        intro: e.intro_des,
+        cover: e.img_url,
+        words: e.words,
+        updateTime: new Date(parseInt(e.lastupdate) * 1000), // 更新日期
+        lastChapterName: e.lastchapter,
+        status: e.fullflag === '0' ? 0 : 1, // 状态: 0: 连载; 1: 完本; 2: 断更; 
+      });
     });
-  });
+  }
   return {
     data: {
       data: array,
@@ -106,7 +108,7 @@ async function chapter(bid, cid) {
       message: 'Network error!',
     };
   }
-  let $ = JSON.parse(response.data); 
+  let $ = JSON.parse(response.data);
   return {
     data: {
       finalUrl: response.finalUrl,
@@ -134,7 +136,7 @@ const categories = {
 async function category(categories, opaque) {
   let type = categories[0];
   let page = opaque ? opaque.page : 1;
-  let pre = 30; 
+  let pre = 30;
   let token = CryptoJS.MD5(`auth_shipsay_941376${new Date().getMinutes()}`).toString();
   let response = await fetch(`http://apitt.kanshushenapp.com/json/api_class_list.php?page=${page}&per=${pre}&sortid=${type}&token=${token}`);
   if (response.status !== 200) {
@@ -143,7 +145,7 @@ async function category(categories, opaque) {
       message: 'Network error!',
     };
   }
-  
+
   let $ = JSON.parse(response.data);
   let array = [];
   $.forEach(e => {
