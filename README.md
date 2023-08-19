@@ -1,6 +1,6 @@
 ## 书源链接🔗
 
-https://github.com/open-book-source/booksource/raw/main/repository.json
+https://github.com/open-book-source/booksource-third-party/raw/main/repository.json
 
 OR
 

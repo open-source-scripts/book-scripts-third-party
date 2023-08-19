@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          衍墨轩
 // @domain        ymxwx.com
-// @version       1.0.0
+// @version       1.0.1
 // @supportURL    https://github.com/open-book-source/booksource-third-party/issues
 // @function      search
 // @function      detail
@@ -36,7 +36,7 @@ async function search(keyword, opaque) {
     let lastChapterEle = item.querySelector("span.c2 a");
     let name = nameEle.text;
     let lastChapterUrl = lastChapterEle.getAttribute("href");
-    let matchArray = lastChapterUrl.match(/book\/(\d+)\/(\d+)\/(\d+).html/);
+    let matchArray = lastChapterUrl.match(/book\/(\d+)\/(\d+)\/(\d*)\.html/);
     let cateId = matchArray[1];
     let bookId = matchArray[2];
     let id = JSON.stringify({ cateId: cateId, bookId: bookId })

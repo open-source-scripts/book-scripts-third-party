@@ -2,7 +2,7 @@
 // @name          爱青果
 // @domain        api-new.iqingguo.com
 // @homepage      https://iqingguo.com
-// @version       1.0.0
+// @version       1.0.1
 // @icon          https://iqingguo.com/favicon.ico
 // @supportUrl    https://github.com/open-book-source/booksource-third-party/issues
 // @function      categories
@@ -86,7 +86,7 @@ async function category(categories, opaque) {
           author: e.author,
           authorId: e.authorid,
           category: e.cate.catename,
-          tags: e.label,
+          tags: e.label ? e.label : null,
           intro: e.remark,
           cover: e.coverpic,
           words: parseInt(e.words),
@@ -125,7 +125,7 @@ async function search(keyword, opaque) {
           author: e.author,
           authorId: e.authorid,
           category: e.cate.catename,
-          tags: e.label,
+          tags: e.label ? e.label : null,
           intro: e.remark,
           cover: e.coverpic,
           words: parseInt(e.words),
@@ -161,7 +161,7 @@ async function detail(id) {
       author: $.data.author,
       authorId: $.data.authorid,
       category: $.data.cate.catename,
-      tags: $.data.label,
+      tags: $.data.label ? $.data.label : null,
       intro: $.data.remark,
       cover: $.data.coverpic,
       words: parseInt($.data.words),

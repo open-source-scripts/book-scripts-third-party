@@ -14,7 +14,7 @@
       "domain": "api-new.iqingguo.com",
       "homepage": "https://iqingguo.com",
       "icon": "https://iqingguo.com/favicon.ico",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
@@ -56,7 +56,7 @@
       "format": "javascript",
       "name": "衍墨轩",
       "domain": "ymxwx.com",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ]
 }
