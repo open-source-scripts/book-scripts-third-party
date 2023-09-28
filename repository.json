@@ -10,6 +10,12 @@
     },
     {
       "format": "javascript",
+      "name": "熊猫看书",
+      "domain": "anduril.xmkanshu.com",
+      "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
       "name": "爱青果",
       "domain": "api-new.iqingguo.com",
       "homepage": "https://iqingguo.com",
