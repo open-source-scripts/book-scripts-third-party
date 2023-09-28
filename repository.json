@@ -24,6 +24,12 @@
     },
     {
       "format": "javascript",
+      "name": "酷我小说",
+      "domain": "appi.kuwo.cn",
+      "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
       "name": "笔趣阁",
       "domain": "bqg221.com",
       "version": "1.0.0"
