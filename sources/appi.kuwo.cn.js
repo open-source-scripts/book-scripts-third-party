@@ -123,7 +123,7 @@ async function chapter(bid, cid) {
   }
   return {
     data: {
-      finalUrl: resp.url,
+      finalUrl: `http://appi.kuwo.cn/novels/api/book/${bid}/chapters/${cid}`,
       body: jsonData.data.content,
     },
   }
