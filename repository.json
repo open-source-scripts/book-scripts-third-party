@@ -60,12 +60,6 @@
     },
     {
       "format": "javascript",
-      "name": "读书阁",
-      "domain": "www.lianjianxsw.com",
-      "version": "1.0.0"
-    },
-    {
-      "format": "javascript",
       "name": "X小说",
       "domain": "xcmfu.com",
       "version": "1.0.2"
