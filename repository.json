@@ -4,12 +4,6 @@
   "sources": [
     {
       "format": "javascript",
-      "name": "必看悦读",
-      "domain": "97yd.com",
-      "version": "1.0.1"
-    },
-    {
-      "format": "javascript",
       "name": "熊猫看书",
       "domain": "anduril.xmkanshu.com",
       "version": "1.0.0"

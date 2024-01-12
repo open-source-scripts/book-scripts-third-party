@@ -345,18 +345,10 @@ interface UI {
     prompt(text: string): Promise<null | string>;
 
     /**
-     * 网页类型认证页面
-     * @param url 验证地址
-     * @param domain 获取 cookies 域名
-     * @param params 请求参数: {cookies: [...], userAgent: ''}
+     * 配置扩展
+     * @param inputs 配置参数
      */
-    authorization(url: string, domain: string, params?: object): Promise<null | object>;
-
-     /**
-     * 输入类型认证页面
-     * @param params 页面参数
-     */ 
-     authorization(params: object): Promise<null | object>;
+    configure(inputs: object): Promise<null | object>;
 }
 
 declare var UI: UI;

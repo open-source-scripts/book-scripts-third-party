@@ -1,4 +1,5 @@
 // ==UserScript==
+// @status        obsolete
 // @name          必看悦读
 // @domain        97yd.com
 // @version       1.0.1
