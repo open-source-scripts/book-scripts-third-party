@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          看书神
 // @domain        apitt.kanshushenapp.com
-// @version       1.0.1
-// @supportURL    https://github.com/open-book-source/booksource-third-party/issues
+// @version       1.0.2
+// @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @require       https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @function      search
 // @function      detail
@@ -15,10 +15,7 @@ async function search(keyword, opaque) {
   let token = CryptoJS.MD5(`auth_shipsay_941376${new Date().getMinutes()}`).toString();
   let response = await fetch(`http://apitt.kanshushenapp.com/json/api_search.php?searchkey=${keyword}&token=${token}`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   let array = [];
@@ -41,18 +38,15 @@ async function search(keyword, opaque) {
   return {
     data: {
       data: array,
-    }
+    },
   };
 }
 
 async function detail(id) {
   let token = CryptoJS.MD5(`auth_shipsay_941376${new Date().getMinutes()}`).toString();
-  let response = await fetch(`http://apitt.kanshushenapp.com/json/api_info.php?aid=${id}&token=${token}`)
+  let response = await fetch(`http://apitt.kanshushenapp.com/json/api_info.php?aid=${id}&token=${token}`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   return {
@@ -77,12 +71,9 @@ async function toc(id) {
   let hasMore = true;
   let array = [];
   while (hasMore) {
-    let response = await fetch(`http://apitt.kanshushenapp.com/json/api_indexlist.php?aid=${id}&per=20000&page=${page}&token=${token}`)
+    let response = await fetch(`http://apitt.kanshushenapp.com/json/api_indexlist.php?aid=${id}&per=20000&page=${page}&token=${token}`);
     if (response.status !== 200) {
-      return {
-        code: response.status,
-        message: 'Network error!',
-      };
+      throw new NetworkError(response.status);
     }
     let $ = JSON.parse(response.data);
     $.chapterrows.forEach(e => {
@@ -101,12 +92,9 @@ async function toc(id) {
 
 async function chapter(bid, cid) {
   let token = CryptoJS.MD5(`auth_shipsay_941376${new Date().getMinutes()}`).toString();
-  let response = await fetch(`http://apitt.kanshushenapp.com/json/api_read.php?aid=${bid}&cid=${cid}&token=${token}`)
+  let response = await fetch(`http://apitt.kanshushenapp.com/json/api_read.php?aid=${bid}&cid=${cid}&token=${token}`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   return {
@@ -120,15 +108,15 @@ async function chapter(bid, cid) {
 const categories = {
   data: {
     children: [
-      { key: '全部', value: '0' },
-      { key: '玄幻魔法', value: '1' },
-      { key: '武侠修真', value: '2' },
-      { key: '都市言情', value: '3' },
-      { key: '历史军事', value: '4' },
-      { key: '科幻灵异', value: '6' },
-      { key: '游戏竞技', value: '5' },
-      { key: '女生耽美', value: '7' },
-      { key: '其他类型', value: '8' },
+      {key: '全部', value: '0'},
+      {key: '玄幻魔法', value: '1'},
+      {key: '武侠修真', value: '2'},
+      {key: '都市言情', value: '3'},
+      {key: '历史军事', value: '4'},
+      {key: '科幻灵异', value: '6'},
+      {key: '游戏竞技', value: '5'},
+      {key: '女生耽美', value: '7'},
+      {key: '其他类型', value: '8'},
     ],
   },
 };
@@ -140,10 +128,7 @@ async function category(categories, opaque) {
   let token = CryptoJS.MD5(`auth_shipsay_941376${new Date().getMinutes()}`).toString();
   let response = await fetch(`http://apitt.kanshushenapp.com/json/api_class_list.php?page=${page}&per=${pre}&sortid=${type}&token=${token}`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
 
   let $ = JSON.parse(response.data);
@@ -169,6 +154,6 @@ async function category(categories, opaque) {
       opaque: {
         page: ++page,
       },
-    }
+    },
   };
 }

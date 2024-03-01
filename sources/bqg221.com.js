@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          笔趣阁
 // @domain        bqg221.com
-// @version       1.0.0
-// @supportURL    https://github.com/open-book-source/booksource-third-party/issues
+// @version       1.0.1
+// @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
 // @function      toc
@@ -11,18 +11,18 @@
 // ==/UserScript==
 
 function parseSetCookie(cookie) {
-  let arr = cookie.replace(/expires=(.*?)GMT/g, function ($1) {
-    return "expires=" + new Date($1).getTime();
-  }).split(", ");
+  let arr = cookie.replace(/expires=(.*?)GMT/g, function($1) {
+    return 'expires=' + new Date($1).getTime();
+  }).split(', ');
 
   let cookies = [];
   for (let i = 0; i < arr.length; i++) {
-    let cookie = parse(/([^=;\s]+)=([^;]+);?/g, arr[i].replace(/; httponly/g, "$&=true"));
+    let cookie = parse(/([^=;\s]+)=([^;]+);?/g, arr[i].replace(/; httponly/g, '$&=true'));
     cookies.push(cookie);
   }
 
   function parse(reg, text) {
-    if (!reg || !text) return {}
+    if (!reg || !text) return {};
     const hash = {};
     let res = reg.exec(text);
     while (res !== null) {
@@ -38,12 +38,9 @@ function parseSetCookie(cookie) {
 // 搜索
 async function search(keyword, opaque) {
   let query = encodeURIComponent(keyword);
-  let hmResponse = await fetch(`https://www.bqg221.com/user/hm.html?q=${query}`)
+  let hmResponse = await fetch(`https://www.bqg221.com/user/hm.html?q=${query}`);
   if (hmResponse.status !== 200) {
-    return {
-      code: hmResponse.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(hmResponse.status);
   }
   let hm = parseSetCookie(hmResponse.headers.get('set-cookie')[0]).find((e) => e.hm);
   const headers = {};
@@ -54,10 +51,7 @@ async function search(keyword, opaque) {
     headers: headers,
   });
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
 
   let items = JSON.parse(response.data);
@@ -93,20 +87,17 @@ async function search(keyword, opaque) {
 async function detail(id) {
   let response = await fetch(`https://www.bqg221.com/biquge/${id}/`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let uri = Uri.parse(response.finalUrl);
   let $ = new Document(response.data);
-  let name = $.querySelector("div.info > h1").ownText.trim();
-  let author = $.querySelector("div.info span:nth-child(1)").text.match(/：(.*)/)[1];
-  let intro = $.querySelector("div.info > div.intro > dl > dd").text.trim();
-  let cover = uri.resolve($.querySelector("div.info > div.cover > img").getAttribute("src")).toString();
-  let updateTime = Date.parseWithFormat($.querySelector("div.info > div.small > span:nth-child(3)").text.match(/：(.*)/)[1], "yyyy-MM-dd HH:mm:ss");
-  let lastChapterName = $.querySelector("div.info > div.small > span:nth-child(4) > a").text;
-  let status = $.querySelector("div.info > div.small > span:nth-child(2)").text.includes('连载') ? 0 : 1;
+  let name = $.querySelector('div.info > h1').ownText.trim();
+  let author = $.querySelector('div.info span:nth-child(1)').text.match(/：(.*)/)[1];
+  let intro = $.querySelector('div.info > div.intro > dl > dd').text.trim();
+  let cover = uri.resolve($.querySelector('div.info > div.cover > img').getAttribute('src')).toString();
+  let updateTime = Date.parseWithFormat($.querySelector('div.info > div.small > span:nth-child(3)').text.match(/：(.*)/)[1], 'yyyy-MM-dd HH:mm:ss');
+  let lastChapterName = $.querySelector('div.info > div.small > span:nth-child(4) > a').text;
+  let status = $.querySelector('div.info > div.small > span:nth-child(2)').text.includes('连载') ? 0 : 1;
   return {
     data: {
       id: id,
@@ -118,7 +109,7 @@ async function detail(id) {
       lastChapterName: lastChapterName,
       status: status,
       opaque: undefined,
-    }
+    },
   };
 }
 
@@ -126,15 +117,12 @@ async function detail(id) {
 async function toc(id) {
   let response = await fetch(`https://www.bqg221.com/biquge/${id}/`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
 
   let uri = Uri.parse(response.finalUrl);
   let $ = new Document(response.data);
-  let items = $.querySelectorAll(`.listmain a`)
+  let items = $.querySelectorAll(`.listmain a`);
   let array = [];
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
@@ -155,17 +143,14 @@ async function toc(id) {
 async function chapter(bid, cid) {
   let response = await fetch(`https://www.bqg221.com/biquge/${bid}/${cid}.html`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let $ = new Document(response.data);
-  let contentElement = $.querySelector("#chaptercontent");
-  let readinlineElement = contentElement.querySelector(".readinline");
+  let contentElement = $.querySelector('#chaptercontent');
+  let readinlineElement = contentElement.querySelector('.readinline');
   if (readinlineElement) readinlineElement.remove();
   let html = contentElement.innerHtml;
-  let title = $.querySelector("div.content > h1.wap_none").text.replace(' ', '');
+  let title = $.querySelector('div.content > h1.wap_none').text.replace(' ', '');
   return {
     data: {
       finalUrl: response.finalUrl,
@@ -177,14 +162,14 @@ async function chapter(bid, cid) {
 const categories = {
   data: {
     children: [
-      { key: '玄幻', value: '1' },
-      { key: '武侠', value: '2' },
-      { key: '都市', value: '3' },
-      { key: '历史', value: '4' },
-      { key: '网游', value: '5' },
-      { key: '科幻', value: '6' },
-      { key: '女生', value: '7' },
-      { key: '完本', value: '0' },
+      {key: '玄幻', value: '1'},
+      {key: '武侠', value: '2'},
+      {key: '都市', value: '3'},
+      {key: '历史', value: '4'},
+      {key: '网游', value: '5'},
+      {key: '科幻', value: '6'},
+      {key: '女生', value: '7'},
+      {key: '完本', value: '0'},
     ],
   },
 };
@@ -194,10 +179,7 @@ async function category(categories, opaque) {
   let page = opaque ? opaque.page : 1;
   let response = await fetch(`https://www.bqg221.com/json?sortid=${type}&page=${page}`);
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let items = JSON.parse(response.data);
   let array = [];

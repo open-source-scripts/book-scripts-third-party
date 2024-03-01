@@ -1,12 +1,12 @@
 {
   "author": "Open Book Source",
-  "homepage": "https://github.com/open-book-source/booksource-third-party",
+  "homepage": "https://github.com/open-source-scripts/book-scripts",
   "sources": [
     {
       "format": "javascript",
       "name": "熊猫看书",
       "domain": "anduril.xmkanshu.com",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
@@ -14,61 +14,61 @@
       "domain": "api-new.iqingguo.com",
       "homepage": "https://iqingguo.com",
       "icon": "https://iqingguo.com/favicon.ico",
-      "version": "1.0.1"
+      "version": "1.0.2"
     },
     {
       "format": "javascript",
       "name": "看书神",
       "domain": "apitt.kanshushenapp.com",
-      "version": "1.0.1"
+      "version": "1.0.2"
     },
     {
       "format": "javascript",
       "name": "酷我小说",
       "domain": "appi.kuwo.cn",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
       "name": "笔趣阁",
       "domain": "bqg221.com",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
       "name": "读书阁",
       "domain": "lianjianxsw.com",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
       "name": "米读小说",
       "domain": "mdxs123.com",
-      "version": "1.0.1"
+      "version": "1.0.2"
     },
     {
       "format": "javascript",
       "name": "企鹅听书",
       "domain": "pub.ddrd8.com",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
       "name": "69书吧",
       "domain": "www.69shuba.com",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "format": "javascript",
       "name": "X小说",
       "domain": "xcmfu.com",
-      "version": "1.0.2"
+      "version": "1.0.3"
     },
     {
       "format": "javascript",
       "name": "衍墨轩",
       "domain": "ymxwx.com",
-      "version": "1.0.1"
+      "version": "1.0.2"
     }
   ]
 }
