@@ -54,6 +54,13 @@
     },
     {
       "format": "javascript",
+      "name": "深夜看书",
+      "domain": "shenyebook.com",
+      "homepage": "www.shenyebook.com",
+      "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
       "name": "69书吧",
       "domain": "www.69shuba.com",
       "version": "1.0.1"
