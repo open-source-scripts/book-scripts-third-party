@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          熊猫看书
 // @domain        anduril.xmkanshu.com
-// @version       1.0.1
+// @version       1.0.2
 // @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
@@ -28,13 +28,13 @@ async function search(keyword, opaque) {
     data: {
       data: jsonData.result.books.map((e) => {
         return {
-          id: e.book_id + '',
+          id: `${e.book_id}`,
           name: e.book_name,
           author: e.author_name,
           category: e.book_type_name,
           intro: e.book_desc,
           cover: e.cover_picture,
-          words: e.book_size,
+          words: e.book_size * 1000,
         };
       }),
       hasMore: jsonData.result.has_more == 1,
@@ -57,14 +57,14 @@ async function detail(id) {
   let bookData = jsonData.result;
   return {
     data: {
-      id: bookData.book_id,
+      id: `${bookData.book_id}`,
       name: bookData.book_name,
       author: bookData.author_name,
-      authorId: bookData.author_id,
-      category: bookData.book_category_full_name,
-      intro: bookData.cover_picture,
-      cover: bookData.cover_url,
-      words: bookData.book_size,
+      authorId: `${bookData.author_id}`,
+      category: bookData.book_type_name,
+      intro: bookData.book_desc,
+      cover: bookData.cover_picture,
+      words: bookData.book_size * 1000,
       updateTime: Date.parseWithFormat(bookData.last_update_time, 'yyyy-MM-dd HH:mm:ss'),
       lastChapterName: bookData.last_chapter_name,
       status: bookData.book_status == 50 ? 0 : 1,
