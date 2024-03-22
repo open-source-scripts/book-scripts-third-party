@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          69书吧69shu.xyz
 // @domain        www.69shu.xyz
-// @version       1.0.0
+// @version       1.0.1
 // @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
@@ -97,10 +97,12 @@ async function chapter(bid, cid) {
   }
   let doc = new Document(resp.data);
   let txtnav = doc.querySelector('#chaptercontent');
+  let replaceContent = txtnav.innerHtml.replace(/<p>.+接着再看更方便。<\/p>/,'');
+  replaceContent = replaceContent.replace("ptwxz.co","")
   return {
     data: {
       finalUrl: chapterUrl,
-      body: txtnav.innerHtml.replace(/<p>.+接着再看更方便。<\/p>/,''),
+      body: replaceContent,
     },
   };
 }
