@@ -73,6 +73,13 @@
     },
     {
       "format": "javascript",
+      "name": "飞速中文",
+      "domain": "www.feibzw.com",
+      "icon": "https://www.feibzw.com/favicon.ico",
+      "version": "1.0.0"
+    },
+    {
+      "format": "javascript",
       "name": "X小说",
       "domain": "xcmfu.com",
       "version": "1.0.3"
