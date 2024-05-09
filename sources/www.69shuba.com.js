@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          69书吧
 // @domain        www.69shuba.com
-// @version       1.0.1
+// @version       1.0.2
 // @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
@@ -9,8 +9,10 @@
 // @function      chapter
 // ==/UserScript==
 
+const host = 'https://www.69shuba.pro'
+
 async function search(keyword, opaque) {
-  let resp = await fetch(`https://www.69shuba.com/modules/article/search.php`, {
+  let resp = await fetch(`${host}/modules/article/search.php`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -43,7 +45,7 @@ async function search(keyword, opaque) {
 }
 
 async function detail(id) {
-  let resp = await fetch(`https://www.69shuba.com/book/${id}.htm`, {
+  let resp = await fetch(`${host}/book/${id}.htm`, {
     responseType: 'bytes',
   });
   if (resp.status !== 200) {
@@ -71,7 +73,7 @@ async function detail(id) {
 }
 
 async function toc(id) {
-  let resp = await fetch(`https://www.69shuba.com/book/${id}/`, {
+  let resp = await fetch(`${host}/book/${id}/`, {
     responseType: 'bytes',
   });
   if (resp.status !== 200) {
@@ -91,7 +93,7 @@ async function toc(id) {
 }
 
 async function chapter(bid, cid) {
-  let chapterUrl = `https://www.69shuba.com/txt/${bid}/${cid}`;
+  let chapterUrl = `${host}/txt/${bid}/${cid}`;
   let resp = await fetch(chapterUrl, {
     responseType: 'bytes',
   });

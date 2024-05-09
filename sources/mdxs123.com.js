@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          米读小说
 // @domain        mdxs123.com
-// @version       1.0.2
+// @version       1.0.3
 // @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
@@ -10,8 +10,10 @@
 // @function      categories
 // ==/UserScript==
 
+const host = 'https://m.mdxs123.com';
+
 async function search(keyword, opaque) {
-  let htmlResp = await fetch(`https://www.mdxs123.com/user/hm.html?q=${encodeURIComponent(keyword)}`, {
+  let htmlResp = await fetch(`${host}/user/hm.html?q=${encodeURIComponent(keyword)}`, {
     method: 'GET',
     headers: {
       'User-Agent': UserAgents.macos,
@@ -24,7 +26,7 @@ async function search(keyword, opaque) {
   const cookie = htmlResp.headers.get('set-cookie')[0];
   // 清理一下 cookie 的格式，移除过期时间，只保留基础的键值对才能正常使用
   const req_cookie = cookie.replace(/expires=(.+?);\s/gi, '').replace(/path=\/(,?)(\s?)/gi, '').trim();
-  let resp = await fetch(`https://www.mdxs123.com/user/search.html?q=${encodeURIComponent(keyword)}`, {
+  let resp = await fetch(`${host}/user/search.html?q=${encodeURIComponent(keyword)}`, {
     method: 'GET',
     headers: {
       'User-Agent': UserAgents.macos,
@@ -61,7 +63,7 @@ async function search(keyword, opaque) {
 
 async function detail(id) {
   let idObj = JSON.parse(id);
-  let response = await fetch(`https://www.mdxs123.com/book/${id}/`, {
+  let response = await fetch(`${host}/book/${id}/`, {
     headers: {'User-Agent': UserAgents.macos},
   });
   if (response.status !== 200) {
@@ -69,13 +71,13 @@ async function detail(id) {
   }
   let uri = Uri.parse(response.finalUrl);
   let doc = new Document(response.data);
-  let name = doc.querySelector('.info > h1').ownText.trim();
-  let author = doc.querySelector('.info > .small > span:nth-of-type(1)').text.replace('作者：', '');
-  let intro = doc.querySelector('.info > .intro').text.replace('展开全部>>', '').trim();
-  let cover = uri.resolve(doc.querySelector('.info > .cover > img').getAttribute('src')).toString();
-  let updateTime = Date.parseWithFormat(doc.querySelector('.info > .small > span:nth-of-type(3)').text.replace('更新：', ''), 'yyyy-MM-dd HH:mm:ss');
-  let lastChapterName = doc.querySelector('.info > .small > span:nth-of-type(4) a').text;
-  let status = doc.querySelector('.info > .small > span:nth-of-type(2)') === '状态：连载' ? 1 : 0;
+  let name = doc.querySelector('.book_box .name').text.trim();
+  let author = doc.querySelector('.dd_box > span:nth-child(1)').text.replace('作者：', '');
+  let intro = doc.querySelector('.book_about dd').text.replace('展开全部>>', '').trim();
+  let cover = uri.resolve(doc.querySelector('.book_info .cover > img').getAttribute('src')).toString();
+  let updateTime = Date.parseWithFormat(doc.querySelector('.book_box > dl > dd:nth-child(4) > span').text.replace('更新：', ''), 'yyyy-MM-dd HH:mm:ss');
+  let lastChapterName = doc.querySelector('.book_last > dl > dd:nth-child(2) > a')?.text;
+  let status = doc.querySelector('.book_box > dl > dd:nth-child(3) > span:nth-child(1)').text.indexOf('完本') !== -1 ? 1 : 0;
   return {
     data: {
       id: id,
@@ -92,7 +94,7 @@ async function detail(id) {
 }
 
 async function toc(id) {
-  let response = await fetch(`https://www.mdxs123.com/book/${id}/`, {
+  let response = await fetch(`${host}/book/${id}/list.html`, {
     headers: {'User-Agent': UserAgents.macos},
   });
   if (response.status !== 200) {
@@ -100,7 +102,7 @@ async function toc(id) {
   }
   let uri = Uri.parse(response.finalUrl);
   let doc = new Document(response.data);
-  let items = doc.querySelectorAll('.listmain dl dd:not([class]) a');
+  let items = doc.querySelectorAll('.book_last dl a:not([style])');
   let array = [];
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
@@ -117,7 +119,7 @@ async function toc(id) {
 }
 
 async function chapter(bid, cid) {
-  let response = await fetch(`https://www.mdxs123.com/book/${bid}/${cid}.html`, {
+  let response = await fetch(`${host}/book/${bid}/${cid}.html`, {
     headers: {'User-Agent': UserAgents.macos},
   });
   if (response.status !== 200) {
@@ -151,7 +153,7 @@ const categories = {
 
 async function category(categories, opaque) {
   let type = categories[0];
-  let resp = await fetch(`https://www.mdxs123.com/${type}/`);
+  let resp = await fetch(`${host}/${type}/`);
   if (resp.status !== 200) {
     throw new NetworkError(resp.status);
   }

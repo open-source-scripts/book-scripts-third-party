@@ -1,4 +1,5 @@
 // ==UserScript==
+// @status        obsolete
 // @name          爱青果
 // @domain        api-new.iqingguo.com
 // @homepage      https://iqingguo.com

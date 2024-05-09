@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          企鹅听书
 // @domain        pub.ddrd8.com
-// @version       1.0.1
+// @version       1.0.2
 // @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
@@ -14,7 +14,11 @@ async function search(keyword, opaque) {
   if (resp.status !== 200) {
     throw new NetworkError(resp.status);
   }
-  let jsonData = JSON.parse(resp.data).books;
+  let data = JSON.parse(resp.data);
+  if (data.code === 1) {
+    throw new NetworkError(400, '不支持大陆IP访问');
+  }
+  let jsonData = data.books;
   let result = [];
   for (let item of jsonData) {
     result.push({
