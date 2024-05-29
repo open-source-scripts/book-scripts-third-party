@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          米读小说
 // @domain        mdxs123.com
-// @version       1.0.3
+// @version       1.0.4
 // @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
@@ -37,6 +37,7 @@ async function search(keyword, opaque) {
     throw new NetworkError(resp.status);
   }
   let jsonData = JSON.parse(resp.data);
+  if (jsonData === null || typeof jsonData[Symbol.iterator] !== 'function') return {data: {}};
   let result = [];
   for (let item of jsonData) {
     let url = item.url_list;
