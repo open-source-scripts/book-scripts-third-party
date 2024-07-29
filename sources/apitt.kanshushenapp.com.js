@@ -1,4 +1,5 @@
 // ==UserScript==
+// @status        obsolete
 // @name          看书神
 // @domain        apitt.kanshushenapp.com
 // @version       1.0.2

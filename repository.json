@@ -10,12 +10,6 @@
     },
     {
       "format": "javascript",
-      "name": "看书神",
-      "domain": "apitt.kanshushenapp.com",
-      "version": "1.0.2"
-    },
-    {
-      "format": "javascript",
       "name": "酷我小说",
       "domain": "appi.kuwo.cn",
       "version": "1.0.1"
