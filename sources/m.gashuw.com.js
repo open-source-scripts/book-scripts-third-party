@@ -49,7 +49,6 @@ async function detail(id) {
         throw new NetworkError(resp.status);
     }
     let doc = new Document(resp.data);
-    console.log(resp.data)
     let detail = doc.querySelector(".synopsisArea_detail")
     return {
         data: {
@@ -110,7 +109,6 @@ async function chapter(bid, cid) {
         }
         let doc = new Document(resp.data);
         let content = doc.querySelector("#chaptercontent");
-        console.log(content.text);
         content.querySelector("#content_tip")?.remove();
         content.querySelector("#content_tip")?.remove();
         contentText += content.innerHtml;
@@ -124,7 +122,6 @@ async function chapter(bid, cid) {
     contentText = contentText.replaceAll("本章未完，点击下一页继续阅读","")
     contentText = contentText.replaceAll("歌书网_www.gashuw.com","")
     contentText = contentText.replaceAll("最新网址：m.gashuw.com","")
-    console.log(contentText)
     return {
         data: {
             finalUrl: finalUrl,
