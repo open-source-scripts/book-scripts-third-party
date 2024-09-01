@@ -13,7 +13,7 @@ for (const file of sourceFiles) {
   if (!fs.statSync(file).isFile) continue;
   const meta = script.parseMeta(fs.readFileSync(file, 'utf8'));
   if (meta.status === 'obsolete') continue;
-  
+
   sources.push({
     format: 'javascript',
     type: meta.type,
@@ -29,7 +29,7 @@ for (const file of sourceFiles) {
 }
 const repository = {
   author: 'Open Book Source',
-  homepage: 'https://github.com/open-book-source/booksource-third-party',
+  homepage: 'https://github.com/open-source-scripts/book-scripts',
   sources: sources,
 };
 

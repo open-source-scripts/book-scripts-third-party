@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          衍墨轩
 // @domain        ymxwx.com
-// @version       1.0.1
-// @supportURL    https://github.com/open-book-source/booksource-third-party/issues
+// @version       1.0.2
+// @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
 // @function      toc
@@ -19,10 +19,7 @@ async function search(keyword, opaque) {
     },
   })
   if (resp.status !== 200) {
-    return {
-      code: resp.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(resp.status);
   }
   let document = new Document(resp.data);
   let items = document.querySelectorAll(".container > div.left > .lastest > ul > li")
@@ -72,10 +69,7 @@ async function detail(id) {
     headers: { "User-Agent": UserAgents.macos },
   });
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let doc = new Document(response.data);
   let infoElement = doc.querySelector(".container > div.left > .info")
@@ -107,10 +101,7 @@ async function toc(id) {
     headers: { "User-Agent": UserAgents.macos },
   });
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let uri = Uri.parse(response.finalUrl);
   let document = new Document(response.data);
@@ -139,10 +130,7 @@ async function chapter(bid, cid) {
     },
   });
   if (response.status !== 200) {
-    return {
-      code: response.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(response.status);
   }
   let document = new Document(response.data);
   let element = document.querySelector(".chaptercontent div.content");
@@ -181,10 +169,7 @@ async function category(categories, opaque) {
   let page = opaque ? opaque.page : 1;
   let resp = await fetch(`http://www.ymxwx.com/${type}/${page}.htm`);
   if (resp.status !== 200) {
-    return {
-      code: resp.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(resp.status);
   }
   let document = new Document(resp.data);
   let items = document.querySelectorAll(".container > div.left > .lastest > ul > li")

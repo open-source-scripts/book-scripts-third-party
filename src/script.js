@@ -4,7 +4,7 @@ exports.isUserScript = function isUserScript(text) {
   if (/^\s*</.test(text)) return false; // HTML
   if (text.indexOf('// ==UserScript==') < 0) return false; // Lack of meta block
   return true;
-}
+};
 
 const arrayType = {
   default: () => [],
@@ -43,10 +43,9 @@ const metaTypes = {
  */
 exports.parseMeta = function parseMeta(code) {
   // initialize meta
-  const meta = Object.keys(metaTypes)
-    .reduce((res, key) => Object.assign(res, {
-      [key]: metaTypes[key].default(),
-    }), {});
+  const meta = Object.keys(metaTypes).reduce((res, key) => Object.assign(res, {
+    [key]: metaTypes[key].default(),
+  }), {});
   const metaBody = code.match(METABLOCK_RE)[1] || '';
   metaBody.replace(/(?:^|\n)\s*\/\/\x20(@\S+)(.*)/g, (_match, rawKey, rawValue) => {
     const [keyName, locale] = rawKey.slice(1).split(':');
@@ -63,4 +62,4 @@ exports.parseMeta = function parseMeta(code) {
   // @homepageURL: compatible with @homepage
   if (!meta.homepageURL && meta.homepage) meta.homepageURL = meta.homepage;
   return meta;
-}
+};

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          读书阁
 // @domain        lianjianxsw.com
-// @version       1.0.0
-// @supportURL    https://github.com/open-book-source/booksource-third-party/issues
+// @version       1.0.1
+// @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @require       https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @function      categories
 // @function      search
@@ -15,15 +15,15 @@ function categories() {
   return {
     data: {
       children: [
-        { key: '全部', value: '全部' },
-        { key: '都市', value: '都市' },
-        { key: '科幻', value: '科幻' },
-        { key: '女频', value: '女频' },
-        { key: '历史', value: '历史' },
-        { key: '网游', value: '网游' },
-        { key: '玄幻', value: '玄幻' },
-        { key: '修真', value: '修真' },
-        { key: '其他', value: '其他' },
+        {key: '全部', value: '全部'},
+        {key: '都市', value: '都市'},
+        {key: '科幻', value: '科幻'},
+        {key: '女频', value: '女频'},
+        {key: '历史', value: '历史'},
+        {key: '网游', value: '网游'},
+        {key: '玄幻', value: '玄幻'},
+        {key: '修真', value: '修真'},
+        {key: '其他', value: '其他'},
       ],
     },
   };
@@ -34,11 +34,11 @@ async function category(categories, opaque) {
   let page = opaque ? opaque.page : 1;
   let response = await fetch(`http://www.lianjianxsw.com/rankList?type=${type}&page=${page}&state=0`);
   if (response.status !== 200) {
-    return { code: response.status, message: 'Network error!' };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   if ($.errCode !== 200) {
-    return { code: 1, message: $.errorMsg };
+    throw new SourceError(`${$.errorMsg}(${$.errCode})`);
   }
   let array = [];
   $.data.forEach(e => {
@@ -64,14 +64,14 @@ async function category(categories, opaque) {
 async function search(keyword, opaque) {
   let response = await fetch(`http://www.lianjianxsw.com/search`, {
     method: 'POST',
-    data: { keyword: keyword },
+    data: {keyword: keyword},
   });
   if (response.status !== 200) {
-    return { code: response.status, message: 'Network error!' };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   if ($.errCode !== 200) {
-    return { code: 1, message: $.errorMsg };
+    throw new SourceError(`${$.errorMsg}(${$.errCode})`);
   }
   let array = [];
   $.data.forEach(e => {
@@ -85,7 +85,7 @@ async function search(keyword, opaque) {
   });
   return {
     data: {
-      data: array
+      data: array,
     },
   };
 }
@@ -93,11 +93,11 @@ async function search(keyword, opaque) {
 async function detail(id) {
   let response = await fetch(`http://www.lianjianxsw.com/bookInfo?bookid=${id}`);
   if (response.status !== 200) {
-    return { code: response.status, message: 'Network error!' };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   if ($.errCode !== 200) {
-    return { code: 1, message: $.errorMsg };
+    throw new SourceError(`${$.errorMsg}(${$.errCode})`);
   }
   return {
     data: {
@@ -119,13 +119,13 @@ async function toc(id) {
   let hasMore = true;
   let array = [];
   while (hasMore) {
-    let response = await fetch(`http://www.lianjianxsw.com/getCataLogs?bookid=${id}&page=${page}&limit=1000`)
+    let response = await fetch(`http://www.lianjianxsw.com/getCataLogs?bookid=${id}&page=${page}&limit=1000`);
     if (response.status !== 200) {
-      return { code: response.status, message: 'Network error!' };
+      throw new NetworkError(response.status);
     }
     let $ = JSON.parse(response.data);
     if ($.errCode !== 200) {
-      return { code: 1, message: $.errorMsg };
+      throw new SourceError(`${$.errorMsg}(${$.errCode})`);
     }
     $.data.list.forEach(e => {
       array.push({
@@ -142,16 +142,16 @@ async function toc(id) {
 }
 
 async function chapter(bid, cid) {
-  let response = await fetch(`http://www.lianjianxsw.com/getContent?bookid=${bid}&chapterid=${cid}`)
+  let response = await fetch(`http://www.lianjianxsw.com/getContent?bookid=${bid}&chapterid=${cid}`);
   if (response.status !== 200) {
-    return { code: response.status, message: 'Network error!' };
+    throw new NetworkError(response.status);
   }
   let $ = JSON.parse(response.data);
   if ($.errCode !== 200) {
-    return { code: 1, message: $.errorMsg };
+    throw new SourceError(`${$.errorMsg}(${$.errCode})`);
   }
   let key = iv = CryptoJS.enc.Utf8.parse('6CE93717FBEA3E4F');
-  let body = CryptoJS.AES.decrypt(CryptoJS.lib.CipherParams.create({ ciphertext: CryptoJS.enc.Base64.parse($.data.chapterInfo.content) }), key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.NoPadding }).toString(CryptoJS.enc.Utf8);
+  let body = CryptoJS.AES.decrypt(CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse($.data.chapterInfo.content)}), key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.NoPadding}).toString(CryptoJS.enc.Utf8);
   return {
     data: {
       finalUrl: response.finalUrl,

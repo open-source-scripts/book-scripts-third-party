@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name          酷我小说
 // @domain        appi.kuwo.cn
-// @version       1.0.0
-// @supportURL    https://github.com/open-book-source/booksource-third-party/issues
+// @version       1.0.1
+// @supportURL    https://github.com/open-source-scripts/book-scripts-third-party/issues
 // @function      search
 // @function      detail
 // @function      toc
 // @function      chapter
 // ==/UserScript==
-
 
 async function search(keyword, opaque) {
   let page = opaque ? opaque.page : 1;
@@ -19,14 +18,11 @@ async function search(keyword, opaque) {
     },
   });
   if (resp.status !== 200) {
-    return {
-      code: resp.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(resp.status);
   }
   let jsonData = JSON.parse(resp.data);
   if (jsonData.code !== 200) {
-    return { code: jsonData.code, message: jsonData.message };
+    throw new SourceError(`${jsonData.message}(${jsonData.code})`);
   }
   return {
     data: {
@@ -54,14 +50,11 @@ async function search(keyword, opaque) {
 async function detail(id) {
   let resp = await fetch(`http://appi.kuwo.cn/novels/api/book/${id}`)
   if (resp.status !== 200) {
-    return {
-      code: resp.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(resp.status);
   }
   let jsonData = JSON.parse(resp.data);
   if (jsonData.code !== 200) {
-    return { code: jsonData.code, message: jsonData.message };
+    throw new SourceError(`${jsonData.message}(${jsonData.code})`);
   }
   let bookData = jsonData.data;
   return {
@@ -87,14 +80,11 @@ async function toc(id) {
     headers: { "User-Agent": UserAgents.android },
   });
   if (resp.status !== 200) {
-    return {
-      code: resp.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(resp.status);
   }
   let jsonData = JSON.parse(resp.data);
   if (jsonData.code !== 200) {
-    return { code: jsonData.code, message: jsonData.message };
+    throw new SourceError(`${jsonData.message}(${jsonData.code})`);
   }
   return {
     data: jsonData.data.map((e) => {
@@ -112,14 +102,11 @@ async function chapter(bid, cid) {
     headers: { "User-Agent": UserAgents.android },
   });
   if (resp.status !== 200) {
-    return {
-      code: resp.status,
-      message: 'Network error!',
-    };
+    throw new NetworkError(resp.status);
   }
   let jsonData = JSON.parse(resp.data);
   if (jsonData.code !== 200) {
-    return { code: jsonData.code, message: jsonData.message };
+    throw new SourceError(`${jsonData.message}(${jsonData.code})`);
   }
   return {
     data: {
