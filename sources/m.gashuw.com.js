@@ -54,7 +54,7 @@ async function detail(id) {
         data: {
             id: id,
             name: doc.querySelector(".title").text,
-            author: detail.querySelector(".author").text.replace("坐着：", ""),
+            author: detail.querySelector(".author").text.replace("作者：", ""),
             category: detail.querySelector(".sort").text.replace("类别：", ""),
             intro: doc.querySelector(".review").text,
             cover: detail.querySelector("img").getAttribute("src"),
