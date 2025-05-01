@@ -22,7 +22,7 @@ async function search(keyword, opaque) {
         let id = item.querySelector("a").getAttribute("href").match(/\d+/)[0];
         return {
           id: id,
-          cover: item.querySelector("img").getAttribute("src"),
+          cover: item.querySelector("img").getAttribute("data-original"),
           name: item.querySelector("dl dt a").text,
           author: item.querySelector("dl .btm a").text,
           intro: item.querySelector("dl dd").text.replace("简介:", ""),
@@ -47,7 +47,7 @@ async function detail(id) {
       name: info.querySelector("h1").text,
       author: info.querySelector("p:nth-of-type(1) a").text,
       intro: detail.querySelector("#intro").text,
-      cover: detail.querySelector("img").getAttribute("src"),
+      cover: detail.querySelector("img").getAttribute("data-original"),
       words: info.querySelector("p:nth-of-type(3)").text.replace("字数：", "").replace("万字", "") * 10000,
       updateTime: Date.parseWithFormat(info.querySelector("p:nth-of-type(7)").text.replace("最后更新：", ""), 'yyyy-MM-dd HH:mm:ss'),
       lastChapterName: info.querySelector("p:nth-of-type(6) a").text,
