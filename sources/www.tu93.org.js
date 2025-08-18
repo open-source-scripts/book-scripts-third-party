@@ -35,7 +35,7 @@ async function search(keyword, opaque) {
   return {
     data: {
       data: doc.querySelectorAll("div.col-md-10")?.map((item) => {
-        let id = item.querySelector(".bookTitle a").getAttribute("href").match(/\d+/)[0];
+        let id = item.querySelector(".bookTitle a").getAttribute("href").match(/book\/(\d+)/)[1];
         return {
           id: id,
           cover: `https://img.tu93.org/${id.substring(0, 2)}/${id}/${id}s.jpg`,
